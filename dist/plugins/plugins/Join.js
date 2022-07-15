@@ -1,17 +1,6 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Plugin = _interopRequireDefault(require("../Plugin"));
-
-var _Igloo = _interopRequireDefault(require("../../objects/room/Igloo"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class Join extends _Plugin.default {
+import Plugin from '../Plugin';
+import Igloo from '../../objects/room/Igloo';
+export default class Join extends Plugin {
   constructor(users, rooms) {
     super(users, rooms);
     this.events = {
@@ -74,12 +63,10 @@ class Join extends _Plugin.default {
     if (!(internalId in this.rooms)) {
       let igloo = await this.db.getIgloo(id);
       if (!igloo) return null;
-      this.rooms[internalId] = new _Igloo.default(igloo, this.db, this.config.game.iglooIdOffset);
+      this.rooms[internalId] = new Igloo(igloo, this.db, this.config.game.iglooIdOffset);
     }
 
     return this.rooms[internalId];
   }
 
 }
-
-exports.default = Join;

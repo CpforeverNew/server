@@ -1,21 +1,8 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Room = _interopRequireDefault(require("../objects/room/Room"));
-
-var _WaddleRoom = _interopRequireDefault(require("../objects/room/WaddleRoom"));
-
-var _OpenIgloos = _interopRequireDefault(require("../objects/room/OpenIgloos"));
-
-var _PluginManager = _interopRequireDefault(require("../plugins/PluginManager"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class DataHandler {
+import Room from '../objects/room/Room';
+import WaddleRoom from '../objects/room/WaddleRoom';
+import OpenIgloos from '../objects/room/OpenIgloos';
+import PluginManager from '../plugins/PluginManager';
+export default class DataHandler {
   constructor(id, users, db, config, discord) {
     this.id = id;
     this.users = users;
@@ -25,7 +12,7 @@ class DataHandler {
     this.partyData = {};
     this.usersById = {};
     this.maxUsers = config.worlds[id].maxUsers;
-    this.openIgloos = new _OpenIgloos.default();
+    this.openIgloos = new OpenIgloos();
     this.init();
   }
 
@@ -39,7 +26,7 @@ class DataHandler {
     };
     this.rooms = await this.setRooms();
     await this.setWaddles();
-    this.plugins = new _PluginManager.default(this);
+    this.plugins = new PluginManager(this);
     this.updateWorldPopulation();
   }
 
@@ -47,7 +34,7 @@ class DataHandler {
     let waddles = await this.db.getWaddles();
 
     for (let waddle of waddles) {
-      this.rooms[waddle.roomId].waddles[waddle.id] = new _WaddleRoom.default(waddle);
+      this.rooms[waddle.roomId].waddles[waddle.id] = new WaddleRoom(waddle);
     }
   }
 
@@ -56,7 +43,7 @@ class DataHandler {
     let rooms = {};
 
     for (let data of roomsData) {
-      rooms[data.id] = new _Room.default(data, this);
+      rooms[data.id] = new Room(data, this);
     }
 
     return rooms;
@@ -143,5 +130,3 @@ class DataHandler {
   }
 
 }
-
-exports.default = DataHandler;

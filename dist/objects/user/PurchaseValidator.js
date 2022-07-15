@@ -1,11 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-class PurchaseValidator {
+export default class PurchaseValidator {
   constructor(user) {
     this.user = user;
     this.crumbs = user.crumbs;
@@ -58,5 +51,3 @@ class PurchaseValidator {
   }
 
 }
-
-exports.default = PurchaseValidator;

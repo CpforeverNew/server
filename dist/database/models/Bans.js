@@ -1,15 +1,5 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _sequelize = _interopRequireDefault(require("sequelize"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class Bans extends _sequelize.default.Model {
+import Sequelize from 'sequelize';
+export default class Bans extends Sequelize.Model {
   static init(sequelize, DataTypes) {
     return super.init({
       id: {
@@ -23,12 +13,12 @@ class Bans extends _sequelize.default.Model {
         allowNull: false
       },
       issued: {
-        type: _sequelize.default.DATE,
+        type: Sequelize.DATE,
         allowNull: false,
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
       },
       expires: {
-        type: _sequelize.default.DATE,
+        type: Sequelize.DATE,
         allowNull: false
       },
       moderatorId: {
@@ -47,5 +37,3 @@ class Bans extends _sequelize.default.Model {
   }
 
 }
-
-exports.default = Bans;

@@ -1,17 +1,6 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _fs = _interopRequireDefault(require("fs"));
-
-var _path = _interopRequireDefault(require("path"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class PluginManager {
+import fs from 'fs';
+import path from 'path';
+export default class PluginManager {
   constructor(handler) {
     this.dir = `${__dirname}/plugins`;
     this.events = {};
@@ -20,8 +9,8 @@ class PluginManager {
   }
 
   loadPlugins(handler) {
-    _fs.default.readdirSync(this.dir).forEach(plugin => {
-      let pluginImport = require(_path.default.join(this.dir, plugin)).default;
+    fs.readdirSync(this.dir).forEach(plugin => {
+      let pluginImport = require(path.join(this.dir, plugin)).default;
 
       let pluginObject = new pluginImport(handler);
       this.plugins[plugin.replace('.js', '').toLowerCase()] = pluginObject;
@@ -44,5 +33,3 @@ class PluginManager {
   }
 
 }
-
-exports.default = PluginManager;

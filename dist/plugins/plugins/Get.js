@@ -1,19 +1,7 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Plugin = _interopRequireDefault(require("../Plugin"));
-
-var _sequelize = _interopRequireDefault(require("sequelize"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const Op = _sequelize.default.Op;
-
-class Get extends _Plugin.default {
+import Plugin from '../Plugin';
+import Sequelize from 'sequelize';
+const Op = Sequelize.Op;
+export default class Get extends Plugin {
   constructor(users, rooms) {
     super(users, rooms);
     this.events = {
@@ -141,8 +129,16 @@ class Get extends _Plugin.default {
     let stamps = await this.db.getStamps(args.user);
     let target = await this.db.getUserById(args.user);
     let inventory = await this.db.getInventory(args.user);
+    let username = "";
+
+    if (target.dataValues.username_approved == 1) {
+      username = target.dataValues.username;
+    } else {
+      username = "P" + target.dataValues.id;
+    }
+
     user.send('get_stampbook', {
-      username: target.dataValues.username,
+      username: username,
       stamps: stamps,
       color: target.dataValues.stampbookColor,
       clasp: target.dataValues.stampbookClasp,
@@ -159,5 +155,3 @@ class Get extends _Plugin.default {
   }
 
 }
-
-exports.default = Get;

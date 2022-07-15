@@ -1,15 +1,5 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _sequelize = _interopRequireDefault(require("sequelize"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class Furnitures extends _sequelize.default.Model {
+import Sequelize from 'sequelize';
+export default class Furnitures extends Sequelize.Model {
   static init(sequelize, DataTypes) {
     return super.init({
       id: {
@@ -61,5 +51,3 @@ class Furnitures extends _sequelize.default.Model {
   }
 
 }
-
-exports.default = Furnitures;

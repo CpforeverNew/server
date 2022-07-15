@@ -1,11 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-class Ignore {
+export default class Ignore {
   constructor(user) {
     this.user = user;
     this.db = user.db; // Ignore list
@@ -51,5 +44,3 @@ class Ignore {
   }
 
 }
-
-exports.default = Ignore;

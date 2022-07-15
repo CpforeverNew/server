@@ -1,15 +1,5 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Plugin = _interopRequireDefault(require("../Plugin"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class Moderation extends _Plugin.default {
+import Plugin from '../Plugin';
+export default class Moderation extends Plugin {
   constructor(users, rooms) {
     super(users, rooms);
     this.events = {
@@ -120,5 +110,3 @@ class Moderation extends _Plugin.default {
   }
 
 }
-
-exports.default = Moderation;

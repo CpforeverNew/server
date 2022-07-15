@@ -1,11 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-class IglooInventory {
+export default class IglooInventory {
   constructor(user, inventory) {
     this.user = user;
     this.db = user.db;
@@ -27,5 +20,3 @@ class IglooInventory {
   }
 
 }
-
-exports.default = IglooInventory;

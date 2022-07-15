@@ -1,11 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-class Plugin {
+export default class Plugin {
   constructor(handler) {
     this.handler = handler;
     this.db = handler.db;
@@ -23,5 +16,3 @@ class Plugin {
   }
 
 }
-
-exports.default = Plugin;

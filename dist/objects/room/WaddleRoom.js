@@ -1,17 +1,6 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _SledInstance = _interopRequireDefault(require("../instance/SledInstance"));
-
-var _FindFourInstance = _interopRequireDefault(require("../instance/FindFourInstance"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class WaddleRoom {
+import SledInstance from '../instance/SledInstance';
+import FindFourInstance from '../instance/FindFourInstance';
+export default class WaddleRoom {
   constructor(data) {
     Object.assign(this, data);
     this.users = new Array(data.seats).fill(null);
@@ -56,8 +45,8 @@ class WaddleRoom {
 
   start() {
     let instance;
-    if (this.game == 'sled') instance = new _SledInstance.default(this);
-    if (this.game == 'four') instance = new _FindFourInstance.default(this);
+    if (this.game == 'sled') instance = new SledInstance(this);
+    if (this.game == 'four') instance = new FindFourInstance(this);
     if (this.game !== 'four') this.reset();
     instance.init();
   }
@@ -76,5 +65,3 @@ class WaddleRoom {
   }
 
 }
-
-exports.default = WaddleRoom;

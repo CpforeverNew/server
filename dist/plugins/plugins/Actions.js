@@ -1,15 +1,5 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Plugin = _interopRequireDefault(require("../Plugin"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class Actions extends _Plugin.default {
+import Plugin from '../Plugin';
+export default class Actions extends Plugin {
   constructor(users, rooms) {
     super(users, rooms);
     this.events = {
@@ -17,7 +7,8 @@ class Actions extends _Plugin.default {
       'send_frame': this.sendFrame,
       'snowball': this.snowball,
       'stamp_earned': this.stampEarned,
-      'save_stampbook': this.saveStampbook
+      'save_stampbook': this.saveStampbook,
+      'report_player': this.reportPlayer
     };
   }
 
@@ -88,6 +79,12 @@ class Actions extends _Plugin.default {
     });
   }
 
-}
+  async reportPlayer(args, user) {
+    let userName = (await this.db.getUserById(args.id)).username;
 
-exports.default = Actions;
+    if (userName) {
+      this.discord.reportPlayer(args.reason, userName, args.id, user.data.username);
+    }
+  }
+
+}

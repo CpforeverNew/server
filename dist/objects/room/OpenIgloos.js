@@ -1,11 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-class OpenIgloos {
+export default class OpenIgloos {
   constructor() {
     this.list = [];
   }
@@ -20,9 +13,17 @@ class OpenIgloos {
 
   add(user) {
     if (!this.includes(user.data.id)) {
+      let username;
+
+      if (user.data.username_approved == 1) {
+        username = user.data.username;
+      } else {
+        username = "P" + user.data.id;
+      }
+
       this.list.push({
         id: user.data.id,
-        username: user.data.username
+        username: username
       });
     }
   }
@@ -34,5 +35,3 @@ class OpenIgloos {
   }
 
 }
-
-exports.default = OpenIgloos;

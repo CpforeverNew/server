@@ -1,15 +1,5 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _WaddleInstance = _interopRequireDefault(require("./WaddleInstance"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class FindFourInstance extends _WaddleInstance.default {
+import WaddleInstance from './WaddleInstance';
+export default class FindFourInstance extends WaddleInstance {
   constructor(waddle) {
     super(waddle);
     this.waddle = waddle;
@@ -285,5 +275,3 @@ class FindFourInstance extends _WaddleInstance.default {
   }
 
 }
-
-exports.default = FindFourInstance;

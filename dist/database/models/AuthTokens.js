@@ -1,15 +1,5 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _sequelize = _interopRequireDefault(require("sequelize"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class AuthTokens extends _sequelize.default.Model {
+import Sequelize from 'sequelize';
+export default class AuthTokens extends Sequelize.Model {
   static init(sequelize, DataTypes) {
     return super.init({
       userId: {
@@ -27,7 +17,7 @@ class AuthTokens extends _sequelize.default.Model {
         allowNull: false
       },
       timestamp: {
-        type: _sequelize.default.DATE,
+        type: Sequelize.DATE,
         allowNull: false,
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
       }
@@ -39,5 +29,3 @@ class AuthTokens extends _sequelize.default.Model {
   }
 
 }
-
-exports.default = AuthTokens;

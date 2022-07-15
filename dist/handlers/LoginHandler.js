@@ -1,24 +1,12 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _bcrypt = _interopRequireDefault(require("bcrypt"));
-
-var _crypto = _interopRequireDefault(require("crypto"));
-
-var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
-
-var _fastestValidator = _interopRequireDefault(require("fastest-validator"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import Validator from 'fastest-validator';
 /**
  * Dedicated login server handler that validates user credentials.
  */
-class LoginHandler {
+
+export default class LoginHandler {
   constructor(id, users, db, config) {
     this.id = id;
     this.users = users;
@@ -42,7 +30,7 @@ class LoginHandler {
   }
 
   createValidator() {
-    let validator = new _fastestValidator.default();
+    let validator = new Validator();
     let schema = {
       username: {
         empty: false,
@@ -129,7 +117,7 @@ class LoginHandler {
       return this.responses.notFound;
     }
 
-    let match = await _bcrypt.default.compare(args.password, user.password);
+    let match = await bcrypt.compare(args.password, user.password);
 
     if (!match) {
       return this.responses.wrongPassword;
@@ -201,8 +189,7 @@ class LoginHandler {
 
   async onLoginSuccess(socket, user) {
     // Generate random key, used by client for authentication
-    let randomKey = _crypto.default.randomBytes(32).toString('hex'); // Generate new login key, used to validate user on game server
-
+    let randomKey = crypto.randomBytes(32).toString('hex'); // Generate new login key, used to validate user on game server
 
     user.loginKey = await this.genLoginKey(socket, user, randomKey);
     let populations = await this.getWorldPopulations(user.rank > 3); // All validation passed
@@ -220,9 +207,9 @@ class LoginHandler {
     let address = socket.handshake.address;
     let userAgent = socket.request.headers['user-agent']; // Create hash of login key and user data
 
-    let hash = await _bcrypt.default.hash(`${user.username}${randomKey}${address}${userAgent}`, this.config.crypto.rounds); // JWT to be stored on database
+    let hash = await bcrypt.hash(`${user.username}${randomKey}${address}${userAgent}`, this.config.crypto.rounds); // JWT to be stored on database
 
-    return _jsonwebtoken.default.sign({
+    return jwt.sign({
       hash: hash
     }, this.config.crypto.secret, {
       expiresIn: this.config.crypto.loginKeyExpiry
@@ -255,5 +242,3 @@ class LoginHandler {
   }
 
 }
-
-exports.default = LoginHandler;

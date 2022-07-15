@@ -1,17 +1,6 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Plugin = _interopRequireDefault(require("../Plugin"));
-
-var _bcrypt = _interopRequireDefault(require("bcrypt"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class Manage extends _Plugin.default {
+import Plugin from '../Plugin';
+import bcrypt from "bcrypt";
+export default class Manage extends Plugin {
   constructor(users, rooms) {
     super(users, rooms);
     this.events = {
@@ -73,5 +62,3 @@ class Manage extends _Plugin.default {
   }
 
 }
-
-exports.default = Manage;

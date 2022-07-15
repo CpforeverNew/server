@@ -1,11 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-class Inventory {
+export default class Inventory {
   constructor(user, inventory) {
     this.user = user;
     this.db = user.db;
@@ -37,5 +30,3 @@ class Inventory {
   }
 
 }
-
-exports.default = Inventory;

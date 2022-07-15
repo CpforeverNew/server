@@ -1,23 +1,9 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _bcrypt = _interopRequireDefault(require("bcrypt"));
-
-var _crypto = _interopRequireDefault(require("crypto"));
-
-var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
-
-var _uuid = require("uuid");
-
-var _Plugin = _interopRequireDefault(require("../Plugin"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class GameAuth extends _Plugin.default {
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import { v4 as uuid } from 'uuid';
+import Plugin from '../Plugin';
+export default class GameAuth extends Plugin {
   constructor(users, rooms) {
     super(users, rooms);
     this.events = {
@@ -60,7 +46,7 @@ class GameAuth extends _Plugin.default {
     let token; // Verify JWT
 
     try {
-      decoded = _jsonwebtoken.default.verify(user.data.loginKey, this.config.crypto.secret);
+      decoded = jwt.verify(user.data.loginKey, this.config.crypto.secret);
     } catch (err) {
       return user.close();
     } // Verify hash
@@ -68,7 +54,7 @@ class GameAuth extends _Plugin.default {
 
     let address = user.socket.handshake.address;
     let userAgent = user.socket.request.headers['user-agent'];
-    let match = await _bcrypt.default.compare(`${user.data.username}${args.key}${address}${userAgent}`, decoded.hash);
+    let match = await bcrypt.compare(`${user.data.username}${args.key}${address}${userAgent}`, decoded.hash);
 
     if (!match) {
       return user.close();
@@ -125,5 +111,3 @@ class GameAuth extends _Plugin.default {
   }
 
 }
-
-exports.default = GameAuth;

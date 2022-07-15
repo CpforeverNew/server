@@ -1,11 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-class Room {
+export default class Room {
   constructor(data, handler) {
     Object.assign(this, data);
     this.users = {};
@@ -79,5 +72,3 @@ class Room {
   }
 
 }
-
-exports.default = Room;

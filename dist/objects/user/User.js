@@ -1,33 +1,18 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Buddy = _interopRequireDefault(require("./Buddy"));
-
-var _FurnitureInventory = _interopRequireDefault(require("./FurnitureInventory"));
-
-var _IglooInventory = _interopRequireDefault(require("./IglooInventory"));
-
-var _Ignore = _interopRequireDefault(require("./Ignore"));
-
-var _Inventory = _interopRequireDefault(require("./Inventory"));
-
-var _Stamps = _interopRequireDefault(require("./Stamps"));
-
-var _PurchaseValidator = _interopRequireDefault(require("./PurchaseValidator"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class User {
+import Buddy from './Buddy';
+import FurnitureInventory from './FurnitureInventory';
+import IglooInventory from './IglooInventory';
+import Ignore from './Ignore';
+import Inventory from './Inventory';
+import Stamps from './Stamps';
+import PurchaseValidator from './PurchaseValidator';
+import fs from 'fs';
+export default class User {
   constructor(socket, handler) {
     this.socket = socket;
     this.handler = handler;
     this.db = handler.db;
     this.crumbs = handler.crumbs;
-    this.validatePurchase = new _PurchaseValidator.default(this);
+    this.validatePurchase = new PurchaseValidator(this);
     this.data;
     this.room;
     this.x = 0;
@@ -48,6 +33,24 @@ class User {
     }, 1000);
     this.partyData = {};
     this.setPuffleDecay();
+    this.initChatLogging();
+  }
+
+  initChatLogging() {
+    if (!this.data) return setTimeout(() => this.initChatLogging(), 1000);
+    fs.open(`logs/chat/${this.data.id}.log`, 'a', function (err, fd) {
+      if (err) {
+        console.log(err);
+      }
+    });
+    this.stream = fs.createWriteStream(`logs/chat/${this.data.id}.log`, {
+      flags: 'a'
+    });
+  }
+
+  logChat(message, filtered = false, filter = "") {
+    if (!this.stream) return;
+    this.stream.write(`${new Date().toISOString()} - ${message} - ${filtered ? 'filtered by ' + filter : 'unfiltered'}\n`);
   }
 
   get string() {
@@ -87,29 +90,29 @@ class User {
   }
 
   async setBuddies(buddies) {
-    this.buddy = new _Buddy.default(this);
+    this.buddy = new Buddy(this);
     await this.buddy.init(buddies);
   }
 
   async setIgnores(ignores) {
-    this.ignore = new _Ignore.default(this);
+    this.ignore = new Ignore(this);
     await this.ignore.init(ignores);
   }
 
   setInventory(inventory) {
-    this.inventory = new _Inventory.default(this, inventory);
+    this.inventory = new Inventory(this, inventory);
   }
 
   setIglooInventory(inventory) {
-    this.iglooInventory = new _IglooInventory.default(this, inventory);
+    this.iglooInventory = new IglooInventory(this, inventory);
   }
 
   setFurnitureInventory(inventory) {
-    this.furnitureInventory = new _FurnitureInventory.default(this, inventory);
+    this.furnitureInventory = new FurnitureInventory(this, inventory);
   }
 
   setStamps(stamps) {
-    this.stamps = new _Stamps.default(this, stamps);
+    this.stamps = new Stamps(this, stamps);
   }
 
   setPostcards(postcards) {
@@ -331,5 +334,3 @@ class User {
   }
 
 }
-
-exports.default = User;

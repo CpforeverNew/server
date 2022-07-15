@@ -5,13 +5,12 @@
         "loginKeyExpiry": 300
     },
     "database": {
-        "host": "144.126.158.71",
-        "user": "admin",
-        "password": "GJc>za9j+_y~2T?$7DfcjAF,FZaFmu",
-        "database": "cpforever",
+        "host": "localhost",
+        "user": "server",
+	"password": "V1zP7xtW5NK42S^o^2&7z#tS",
+        "database": "cpf",
         "dialect": "mysql",
         "debug": false
-
     },
     "socketio": {
         "https": false,
@@ -22,7 +21,7 @@
         }
     },
     "cors": {
-        "origin": "http://localhost:8080"
+        "origin": "https://play.cpforever.net"
     },
     "worlds": {
         "Login": {
@@ -32,11 +31,6 @@
         "Blizzard": {
             "host": "localhost",
             "port": 6112,
-            "maxUsers": 300
-        },
-        "Snowball": {
-            "host": "localhost",
-            "port": 6113,
             "maxUsers": 300
         }
     },

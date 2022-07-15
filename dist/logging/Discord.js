@@ -1,19 +1,11 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _discord = require("discord.js");
-
-class Discord {
+import { Client, Intents } from 'discord.js';
+export default class Discord {
   constructor(config) {
     this.ready = false;
     this.config = config;
     const token = config.discordbottoken;
-    const dcbot = new _discord.Client({
-      intents: [_discord.Intents.FLAGS.GUILDS]
+    const dcbot = new Client({
+      intents: [Intents.FLAGS.GUILDS]
     });
     this.dcbot = dcbot;
     this.dcbot.once('ready', () => {
@@ -65,6 +57,25 @@ class Discord {
     channel.send(`**MODERATOR:** ${moderator} **CHANGED THE USERNAME OF** ${oldname} **TO** ${newname}`);
   }
 
+  reportPlayer(reason, username, id, reporterUsername) {
+    if (!this.ready) return;
+    const channel = this.dcbot.channels.cache.get("996152869994639410");
+
+    if (reason == "lang") {
+      channel.send({
+        content: `**USER:** ${reporterUsername} **REPORTED** ${username} **FOR INAPPROPRIATE LANGUAGE**\nPlease can a <@&968646503834988555> review the most recent lines on the attached chat log.\nTIP: If taking action, remember to copy-paste the username into the mod panel in case they use something like a capital i instead of an L`,
+        files: [{
+          attachment: `./logs/chat/${id}.log`,
+          name: `${username}-log.txt`
+        }]
+      });
+    } else if (reason == "name") {
+      channel.send(`**USER:** ${reporterUsername} **REPORTED** ${username} **FOR HAVING AN INAPPROPRIATE USERNAME**\nPlease can a <@&968646503834988555> research this username in more detail to check if it is inappropriate or not.\nTIP: If taking action, remember to copy-paste the username into the mod panel in case they use something like a capital i instead of an L`);
+    } else if (reason == "igloo") {
+      channel.send(`**USER:** ${reporterUsername} **REPORTED** ${username} **FOR HAVING AN INAPPROPRIATE IGLOO**\nPlease can a <@&968646503834988555> log on and review the suitability of their igloo.\nTIP: If taking action, remember to copy-paste the username into the mod panel in case they use something like a capital i instead of an L`);
+    }
+  }
+
   errorAlert(error) {
     if (!this.ready) return;
     const botadmin = this.dcbot.users.fetch(this.config.botowner);
@@ -72,5 +83,3 @@ class Discord {
   }
 
 }
-
-exports.default = Discord;

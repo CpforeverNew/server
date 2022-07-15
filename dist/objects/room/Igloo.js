@@ -1,15 +1,5 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Room = _interopRequireDefault(require("./Room"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class Igloo extends _Room.default {
+import Room from './Room';
+export default class Igloo extends Room {
   constructor(data, db, iglooIdOffset) {
     super(data);
     this.db = db;
@@ -67,5 +57,3 @@ class Igloo extends _Room.default {
   }
 
 }
-
-exports.default = Igloo;

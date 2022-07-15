@@ -1,15 +1,5 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Plugin = _interopRequireDefault(require("../Plugin"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class Ignore extends _Plugin.default {
+import Plugin from '../Plugin';
+export default class Ignore extends Plugin {
   constructor(users, rooms) {
     super(users, rooms);
     this.events = {
@@ -51,5 +41,3 @@ class Ignore extends _Plugin.default {
   }
 
 }
-
-exports.default = Ignore;

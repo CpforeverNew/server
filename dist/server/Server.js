@@ -1,17 +1,6 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _rateLimiterFlexible = _interopRequireDefault(require("rate-limiter-flexible"));
-
-var _User = _interopRequireDefault(require("../objects/user/User"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class Server {
+import RateLimiterFlexible from 'rate-limiter-flexible';
+import User from '../objects/user/User';
+export default class Server {
   constructor(id, users, db, handler, config) {
     this.users = users;
     this.db = db;
@@ -23,7 +12,7 @@ class Server {
       },
       path: '/'
     });
-    this.rateLimiter = new _rateLimiterFlexible.default.RateLimiterMemory({
+    this.rateLimiter = new RateLimiterFlexible.RateLimiterMemory({
       // 20 events allowed per second
       points: 20,
       duration: 1
@@ -69,7 +58,7 @@ class Server {
       }
     }
 
-    let user = new _User.default(socket, this.handler);
+    let user = new User(socket, this.handler);
     this.users[socket.id] = user;
     this.users[socket.id].ipAddress = ip;
     socket.on('message', message => this.messageReceived(message, user));
@@ -96,5 +85,3 @@ class Server {
   }
 
 }
-
-exports.default = Server;

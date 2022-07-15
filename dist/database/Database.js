@@ -1,23 +1,10 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _fs = _interopRequireDefault(require("fs"));
-
-var _path = _interopRequireDefault(require("path"));
-
-var _sequelize = _interopRequireDefault(require("sequelize"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const Op = _sequelize.default.Op;
-
-class Database {
+import fs from 'fs';
+import path from 'path';
+import Sequelize from 'sequelize';
+const Op = Sequelize.Op;
+export default class Database {
   constructor(config) {
-    this.sequelize = new _sequelize.default(config.database, config.user, config.password, {
+    this.sequelize = new Sequelize(config.database, config.user, config.password, {
       host: config.host,
       dialect: config.dialect,
       logging: config.debug ? console.log : false
@@ -33,10 +20,10 @@ class Database {
   }
 
   loadModels() {
-    _fs.default.readdirSync(this.dir).forEach(model => {
-      let modelImport = require(_path.default.join(this.dir, model)).default;
+    fs.readdirSync(this.dir).forEach(model => {
+      let modelImport = require(path.join(this.dir, model)).default;
 
-      let modelObject = modelImport.init(this.sequelize, _sequelize.default);
+      let modelObject = modelImport.init(this.sequelize, Sequelize);
       let name = model.charAt(0).toLowerCase() + model.slice(1, -3);
       this[name] = modelObject;
     });
@@ -803,5 +790,3 @@ class Database {
   }
 
 }
-
-exports.default = Database;

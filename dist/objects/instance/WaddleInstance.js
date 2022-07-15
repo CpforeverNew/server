@@ -1,11 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-class WaddleInstance {
+export default class WaddleInstance {
   constructor(waddle) {
     this.users = [...waddle.users];
     this.ready = [];
@@ -100,5 +93,3 @@ class WaddleInstance {
   }
 
 }
-
-exports.default = WaddleInstance;
