@@ -21,14 +21,14 @@
         }
     },
     "cors": {
-        "origin": "http://localhost:8080"
+        "origin": "https://play.cpforever.org"
     },
     "worlds": {
         "Login": {
             "host": "localhost",
             "port": 6111
         },
-        "Testing": {
+        "Blizzard": {
             "host": "localhost",
             "port": 6112,
             "maxUsers": 300
