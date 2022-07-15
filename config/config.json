@@ -21,7 +21,7 @@
         }
     },
     "cors": {
-        "origin": "https://play.cpforever.org"
+        "origin": "http://localhost:8080"
     },
     "worlds": {
         "Login": {

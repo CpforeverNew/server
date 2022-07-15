@@ -1,7 +1,7 @@
 {
   "name": "cpforever-server",
   "version": "1.6.0-beta",
-  "description": "A server for https://github.com/cpforever/client/",
+  "description": "A server for https://github.com/CpforeverNew/client/",
   "scripts": {
     "dev": "babel-watch ./src/World.js Login Blizzard Snowball",
     "build": "babel src -d dist --copy-files",
@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cpforever/server.git"
+    "url": "git+https://github.com/CpforeverNew/server.git"
   },
   "author": "sahmyool, DirkD",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cpforever/server/issues"
+    "url": "https://github.com/CpforeverNew/server/issues"
   },
-  "homepage": "https://cpforever.net",
+  "homepage": "https://cpforever.org",
   "devDependencies": {
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
