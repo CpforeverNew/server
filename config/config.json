@@ -28,7 +28,7 @@
             "host": "localhost",
             "port": 6111
         },
-        "Snowfall": {
+        "Blizzard": {
             "host": "localhost",
             "port": 6112,
             "maxUsers": 300
