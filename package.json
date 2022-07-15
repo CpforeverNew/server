@@ -18,6 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/CpforeverNew/server.git"
   },
+  "type": "module",
   "author": "sahmyool, DirkD",
   "license": "MIT",
   "bugs": {
