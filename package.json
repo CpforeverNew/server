@@ -1,6 +1,7 @@
 {
   "name": "cpforever-server",
   "version": "1.6.0-beta",
+  "type": "module",
   "description": "A server for https://github.com/cpforever/client/",
   "scripts": {
     "dev": "babel-watch ./src/World.js Login Blizzard Snowball",
