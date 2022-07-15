@@ -25,7 +25,7 @@ class Buddy extends _Plugin.default {
     let recipient = this.usersById[args.id]; // Send request to recipient if they are online
 
     if (recipient) {
-      recipient.buddy.addRequest(user.data.id, user.data.username);
+      recipient.buddy.addRequest(user.data.id, this.filterUsername(user.data));
     }
   }
 
@@ -41,7 +41,7 @@ class Buddy extends _Plugin.default {
     let requester = this.usersById[args.id];
 
     if (requester) {
-      requester.buddy.addBuddy(user.data.id, user.data.username, true);
+      requester.buddy.addBuddy(user.data.id, this.filterUsername(user.data), true);
     } // Db queries
 
 
@@ -53,6 +53,14 @@ class Buddy extends _Plugin.default {
       userId: args.id,
       buddyId: user.data.id
     });
+  }
+
+  filterUsername(penguin) {
+    if (penguin.username_approved == 1) {
+      return penguin.username;
+    } else {
+      return "P" + penguin.id;
+    }
   }
 
   buddyReject(args, user) {

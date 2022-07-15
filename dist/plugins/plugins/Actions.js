@@ -17,7 +17,8 @@ class Actions extends _Plugin.default {
       'send_frame': this.sendFrame,
       'snowball': this.snowball,
       'stamp_earned': this.stampEarned,
-      'save_stampbook': this.saveStampbook
+      'save_stampbook': this.saveStampbook,
+      'report_player': this.reportPlayer
     };
   }
 
@@ -86,6 +87,14 @@ class Actions extends _Plugin.default {
       stampbookClasp: user.data.stampbookClasp,
       stampbookPattern: user.data.stampbookPattern
     });
+  }
+
+  async reportPlayer(args, user) {
+    let userName = (await this.db.getUserById(args.id)).username;
+
+    if (userName) {
+      this.discord.reportPlayer(args.reason, userName, args.id, user.data.username);
+    }
   }
 
 }

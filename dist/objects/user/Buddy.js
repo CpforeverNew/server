@@ -28,11 +28,19 @@ class Buddy {
 
       this.list.push({
         id: user.id,
-        username: user.username,
+        username: this.filterUsername(user),
         online: online
       }); // Send online status to buddy
 
       if (online) this.sendOnline(user.id);
+    }
+  }
+
+  filterUsername(penguin) {
+    if (penguin.username_approved == 1) {
+      return penguin.username;
+    } else {
+      return "P" + penguin.id;
     }
   }
 

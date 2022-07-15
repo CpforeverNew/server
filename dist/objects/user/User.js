@@ -19,6 +19,8 @@ var _Stamps = _interopRequireDefault(require("./Stamps"));
 
 var _PurchaseValidator = _interopRequireDefault(require("./PurchaseValidator"));
 
+var _fs = _interopRequireDefault(require("fs"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class User {
@@ -48,6 +50,26 @@ class User {
     }, 1000);
     this.partyData = {};
     this.setPuffleDecay();
+    this.initChatLogging();
+  }
+
+  initChatLogging() {
+    if (!this.data) return setTimeout(() => this.initChatLogging(), 1000);
+
+    _fs.default.open(`logs/chat/${this.data.id}.log`, 'a', function (err, fd) {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+    this.stream = _fs.default.createWriteStream(`logs/chat/${this.data.id}.log`, {
+      flags: 'a'
+    });
+  }
+
+  logChat(message, filtered = false, filter = "") {
+    if (!this.stream) return;
+    this.stream.write(`${new Date().toISOString()} - ${message} - ${filtered ? 'filtered by ' + filter : 'unfiltered'}\n`);
   }
 
   get string() {
