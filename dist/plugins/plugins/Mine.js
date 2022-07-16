@@ -18,6 +18,7 @@ class Item extends _Plugin.default {
       'delete_mine': this.deleteKey
     };
     this.totalcoins = {};
+    this.max = 175;
   }
 
   async updateCoins(args, user) {
@@ -34,7 +35,7 @@ class Item extends _Plugin.default {
 
     console.log(this.totalcoins);
 
-    if (args.coins > 100) {
+    if (args.coins > this.max) {
       user.send('error', {
         error: 'There was an error adding your coins'
       });
@@ -61,7 +62,7 @@ class Item extends _Plugin.default {
     this.totalcoins[args.miningId] += args.coins;
     user.lastMined = new Date().getTime();
 
-    if (this.totalcoins[args.miningId] >= 100) {
+    if (this.totalcoins[args.miningId] >= this.max) {
       return user.send('mining_error', {
         miningError: 1,
         total: this.totalcoins

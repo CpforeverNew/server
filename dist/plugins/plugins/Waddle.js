@@ -15,8 +15,13 @@ class Waddle extends _Plugin.default {
     this.events = {
       'get_waddles': this.getWaddles,
       'join_waddle': this.joinWaddle,
-      'leave_waddle': this.leaveWaddle
+      'leave_waddle': this.leaveWaddle,
+      'send_error': this.sendError
     };
+  }
+
+  sendError(args, user) {
+    user.send('error', args);
   }
 
   getWaddles(args, user) {
