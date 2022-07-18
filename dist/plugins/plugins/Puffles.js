@@ -105,6 +105,16 @@ class Puffles extends _Plugin.default {
   }
 
   async walkPuffle(args, user) {
+    if (user.data.puffle !== 0) {
+      user.data.walking = 0;
+      user.update({
+        walking: user.data.walking
+      });
+      user.room.send(user, 'stop_walking', {
+        user: user.data.id
+      }, []);
+    }
+
     if (args.puffle !== 0) {
       user.data.walking = args.puffle;
       user.update({
