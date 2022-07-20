@@ -151,7 +151,11 @@ export default class Users extends Sequelize.Model {
                 last_login: {
                     type: DataTypes.DATE,
                     allowNull: false,
-                }
+                }, 
+                lastReport: {
+                    type: DataTypes.INTEGER(20),
+                    allowNull: false
+                },
             },
             { sequelize, timestamps: false, tableName: 'users' }
         )
