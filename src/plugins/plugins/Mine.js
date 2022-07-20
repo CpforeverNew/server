@@ -11,7 +11,7 @@ export default class Item extends Plugin {
             'delete_mine' : this.deleteKey
         }
         this.totalcoins = {};
-        this.max = 175;
+        this.max = 125;
     }
 
     async updateCoins(args, user) {
