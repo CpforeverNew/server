@@ -36,7 +36,6 @@ export default class    Chat extends Plugin {
         if (args.message.length < 1) {
             return
         }
-
         (async () => {
             try {
                 const result = await this.perspective.analyze({
@@ -72,7 +71,8 @@ export default class    Chat extends Plugin {
 
             var specificFilterWords = ['ass', 'hoe', 'nga', "fu", "af", "asf", "hell", "dic", "fk"]
             var filterWords = ["nigger","nigga","faggot","niggr","ngga","fck","niqqa","niqqer","faqqot","faggt","fag","faq","fuq","fuk","nood","nudes","noodes","slxt","cxnt","b!tch","bish","bich","bxtch","pxssy","poosy","pusea","pusy","bunda","puzzy","arse","azz","nxgger","niger","n!ger","n!g","nigg","nxgga","nga","nger","fxck","fucc","fuc","fuk","fxk","phuck","phuc","phxc","cxm","vxg","vag","forn","porn","pen!s","pxn!s","pxnis","penxs","mxther","motherfxcker","mofo","whore","whxre","whor","coc","cxck","sh!t","effin","eff!n","effxn","twt","twxt","thwat","sxx","sex","tass","ashole","ashxle","d!c","d!k","dik","bxxb","boob","lmao","lmfao","cuck","peen","penls","dick","hoes","stfu","cunt","handjob","blowie","drugs","damn","kkk","piss","penis","tiddies","bitch","slut","shit","kill","suicide","lawda","tiddy","titties","titty","pussy","ussy","weiner","wiener","omfg", "ween","undress","threesome","orgy","intercourse","nipples","vibrator","anus","anal","ejaculate","vulva","clit","cum","rape","fuddi","genital","chlamydia","aids","hiv","segsy", "segg", "nude","biddies","squirting","sect","tf","orgasm","creampie","creamed","oral","dam","vape","tequila","vodka","weed","bourbon","nug","roach","marijuana","alcohol","queef","blowjob","blow","ovulating","punani","puss","sperm","fertile","twat"];
-            var wordWhitelist = ['ger','shoes', 'afk', 'coco', 'engage', 'echoes', 'snowshoes', 'horseshoes', 'shoestrings', 'offkey', 'saltwater', 'wristwatch', 'outfit', 'longer', 'thoughtful', 'halloween', 'mermaid', 'restful', 'therapeutic', 'ginger', 'singer', 'grape', 'noodle', 'vague', 'floral', 'skills', 'rubbish', 'california', 'nugget', 'between', 'jazz', 'circumstance', 'approach', 'anger', 'analysis', 'analyze'];
+            var wordWhitelist = ['shoes', 'afk', 'coco', 'engage', 'echoes', 'snowshoes', 'horseshoes', 'shoestrings', 'offkey', 'saltwater', 'wristwatch', 'outfit', 'longer', 'thoughtful', 'halloween', 'mermaid', 'restful', 'therapeutic', 'ginger', 'singer', 'grape', 'noodle', 'vague', 'floral', 'skills', 'rubbish', 'california', 'nugget', 'between', 'jazz', 'circumstance', 'approach', 'anger', 'analysis', 'analyze'];
+            wordWhitelist += ['linger', 'stinger', 'hanger', 'challenger', 'finger', 'doppelganger', 'passenger', 'scavenger', 'endanger', 'endangered', 'danger', 'dangers', 'dangerous', 'messenger', 'outfits', 'outfit', 'stranger']
 
             var words = args.message.toLowerCase().split(" ")
 
