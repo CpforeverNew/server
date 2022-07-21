@@ -27,15 +27,34 @@ class Puffles extends _Plugin.default {
     let type = args.type;
     let name = args.name.charAt(0).toUpperCase() + args.name.slice(1);
     let cost = (await this.db.getPuffleCost(type)).dataValues.cost;
+    const puffles = await this.db.getPuffles(user.data.id);
 
-    if (cost > user.data.coins) {
+    if (puffles.length >= 8) {
+      user.send('error', {
+        error: "You already have 8 puffles."
+      });
+      return;
+    } else if (user.lastPuffle && new Date().getTime() - user.lastPuffle < 60000 * 5) {
+      return user.send('error', {
+        error: 'You need to wait 5 minutes since buying your last puffle.'
+      });
+    } else if (cost > user.data.coins) {
       user.send('error', {
         error: 'You need more coins.'
       });
       return;
+    } else if (name.length > 8) {
+      return user.send('error', {
+        error: 'Puffle name can\'t be greater than 8 chars.'
+      });
+    } else if (name.length <= 2) {
+      return user.send('error', {
+        error: 'Puffle name needs to be atleast 3 characters.'
+      });
     }
 
     user.updateCoins(-cost);
+    user.lastPuffle = new Date().getTime();
     let puffle = await this.db.adoptPuffle(user.data.id, type, name);
     user.send('adopt_puffle', {
       puffle: puffle.id,

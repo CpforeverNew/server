@@ -43,7 +43,7 @@ export default class Item extends Plugin {
         }
         return user.send('mining_error', {miningError:0,total:this.totalcoins,id:args.id})
     }
-
+ 
     deleteKey(args,user) {
         if (!(args.miningId in this.totalcoins) || args.miningId === undefined) return;
 
