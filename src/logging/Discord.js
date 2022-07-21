@@ -104,7 +104,8 @@ export default class Discord {
 
     errorAlert(error) {
         if (!this.ready) return
-        const botadmin = this.dcbot.users.fetch(this.config.botowner)
-        botadmin.send(`**ERROR:** ${error} **REPORTED**`);
+        //999483558794105023
+        const channel = this.dcbot.channels.cache.get("999483558794105023")
+        channel.send(`**ERROR:** ${error} **REPORTED**`);
     } 
 }
