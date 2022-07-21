@@ -18,7 +18,7 @@ class Item extends _Plugin.default {
       'delete_mine': this.deleteKey
     };
     this.totalcoins = {};
-    this.max = 175;
+    this.max = 125;
   }
 
   async updateCoins(args, user) {
