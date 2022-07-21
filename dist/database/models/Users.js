@@ -157,6 +157,10 @@ class Users extends _sequelize.default.Model {
       last_login: {
         type: DataTypes.DATE,
         allowNull: false
+      },
+      lastReport: {
+        type: DataTypes.INTEGER(20),
+        allowNull: false
       }
     }, {
       sequelize,

@@ -81,10 +81,20 @@ export default class Actions extends Plugin {
     }
 
     async reportPlayer(args, user) {
+        if (user.data.lastReport && ((new Date).getTime() - user.data.lastReport < 60000 * 5)) {
+            let userName = (await this.db.getUserById(args.id)).username
+            if (userName) {
+                await this.discord.reportPlayer("duplicate", userName, args.id, user.data.username, user.data.lastReport)
+            }
+            return user.send("error", {error:"You may send another report in 5 minutes. However, if you keep spamming this function, expect moderators to take action on your account. If urgent, use Discord."})
+        }
+
+        let res = await this.db.updateLastReport(user.data.id)
+        user.data.lastReport = res;
         let userName = (await this.db.getUserById(args.id)).username
 
         if (userName) {
-            this.discord.reportPlayer(args.reason, userName, args.id, user.data.username)
+            await this.discord.reportPlayer(args.reason, userName, args.id, user.data.username, user.data.lastReport)
         }
     }
 

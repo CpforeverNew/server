@@ -11,7 +11,7 @@ export default class Item extends Plugin {
             'delete_mine' : this.deleteKey
         }
         this.totalcoins = {};
-        this.max = 175;
+        this.max = 125;
     }
 
     async updateCoins(args, user) {
@@ -43,7 +43,7 @@ export default class Item extends Plugin {
         }
         return user.send('mining_error', {miningError:0,total:this.totalcoins,id:args.id})
     }
-
+ 
     deleteKey(args,user) {
         if (!(args.miningId in this.totalcoins) || args.miningId === undefined) return;
 

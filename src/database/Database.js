@@ -291,6 +291,19 @@ export default class Database {
         }
     }
 
+    async updateLastReport(userID) {
+        let time = (new Date).getTime()
+        this.users.update({
+            lastReport : time
+        }, {
+            where: {
+                id: userID
+            }
+        })
+
+        return time
+    }
+    
     async addCoins(userID, coins) {
         let user = await this.getUserById(userID)
 

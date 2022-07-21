@@ -5,7 +5,7 @@
         "loginKeyExpiry": 300
     },
     "database": {
-        "host": "167.99.227.30",
+        "host": "144.126.145.169",
         "user": "remote",
 	    "password": "5E1m71HrakOn$!BW9fh5OuN@",
         "database": "cpf",
