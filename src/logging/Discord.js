@@ -59,7 +59,7 @@ export default class Discord {
         channel.send(`**MODERATOR:** ${moderator} **CHANGED THE USERNAME OF** ${oldname} **TO** ${newname}`);
     }
 
-    async reportPlayer(reason, username, id, reporterUsername, lastReport=0) {
+    async reportPlayer(reason, username, id, reporterUsername, lastReport=0, userID=0) {
         if (!this.ready) return
         const channel = this.dcbot.channels.cache.get("996152869994639410")
 
@@ -84,9 +84,17 @@ export default class Discord {
             if (this.fakeReports == 0) {
                 this.fakeReports += 1;
                 this.msg = await channel.send(`**USER:** ${reporterUsername} attempted to send a report while they were ratelimited from their last report.\n*If they continue spamming this function, please feel free to take moderator action against their account.*\n\nLast report w/o ratelimit was **${seconds} ago** and they have spammed this function **${this.fakeReports} times**.`)
+                return this.fakeReports
             } else {
                 this.fakeReports += 1;
+                if (this.fakeReports >= 12) {
+                    let date = new Date()
+                    let expiry = date.getTime() + 86400000
+                    this.msg.edit(`**USER:** ${reporterUsername} attempted to send a report while they were ratelimited from their last report.\n*If they continue spamming this function, please feel free to take moderator action against their account.*\n\nLast report w/o ratelimit was **${seconds} ago** and they have spammed this function **${this.fakeReports} times**.\n\n\n**The user has been banned for spamming too much**.`)
+                    return this.fakeReports
+                }
                 this.msg.edit(`**USER:** ${reporterUsername} attempted to send a report while they were ratelimited from their last report.\n*If they continue spamming this function, please feel free to take moderator action against their account.*\n\nLast report w/o ratelimit was **${seconds} ago** and they have spammed this function **${this.fakeReports} times**.`)
+                return this.fakeReports
             }
         }
     }

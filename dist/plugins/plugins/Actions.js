@@ -20,6 +20,7 @@ class Actions extends _Plugin.default {
       'save_stampbook': this.saveStampbook,
       'report_player': this.reportPlayer
     };
+    this.fakeReports = 0;
   }
 
   sendPosition(args, user) {
@@ -94,12 +95,30 @@ class Actions extends _Plugin.default {
       let userName = (await this.db.getUserById(args.id)).username;
 
       if (userName) {
-        await this.discord.reportPlayer("duplicate", userName, args.id, user.data.username, user.data.lastReport);
+        await this.discord.reportPlayer("duplicate", userName, args.id, user.data.username, user.data.lastReport, user.data.id);
+      }
+
+      this.fakeReports += 1;
+
+      if (this.fakeReports >= 12) {
+        let date = new Date();
+        let expiry = date.getTime() + 86400000;
+        console.log();
+        await this.db.ban(user.data.id, expiry, 2763);
+
+        if (user) {
+          user.send('close_with_error', {
+            error: 'You have been banned. Please make sure to follow the CPF rules.'
+          });
+          user.close();
+        }
       }
 
       return user.send("error", {
         error: "You may send another report in 5 minutes. However, if you keep spamming this function, expect moderators to take action on your account. If urgent, use Discord."
       });
+    } else {
+      this.fakeReports = 0;
     }
 
     let res = await this.db.updateLastReport(user.data.id);
