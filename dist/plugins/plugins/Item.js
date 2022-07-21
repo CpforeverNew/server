@@ -21,6 +21,7 @@ class Item extends _Plugin.default {
   }
 
   updatePlayer(args, user) {
+    if (user.data.walking !== 0 && args.item == 35016) return;
     let item = this.items[args.item];
 
     if (!item || item.type == 10 || !user.inventory.includes(args.item)) {
