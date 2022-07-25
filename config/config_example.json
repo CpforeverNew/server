@@ -33,10 +33,5 @@
             "port": 6112,
             "maxUsers": 300
         }
-    },
-    "perspectiveapikey": "PERSPECTIVE_API_KEY",
-    "discordbottoken": "DISCORD_LOGGING_BOT_TOKEN",
-    "chatlogchannel": "CHAT_LOG_CHANNEL_ID",
-    "loginlogchannel": "LOGIN_LOG_CHANNEL_ID",
-    "botowner": "BOT_OWNER_ID"
+    }
 }
