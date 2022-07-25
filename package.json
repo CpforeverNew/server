@@ -3,7 +3,7 @@
   "version": "1.8.0-beta",
   "description": "A server for https://github.com/cpforever/client/",
   "scripts": {
-    "dev": "babel-watch ./src/World.js Login Blizzard Snowball",
+    "dev": "babel-watch ./src/World.js Login Blizzard Snowball dev_mode",
     "build": "babel src -d dist --copy-files",
     "start": "pm2 start ecosystem.config.js",
     "stop": "pm2 stop ecosystem.config.js",
@@ -41,6 +41,7 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
     "perspective-api-client": "^1.1.0",
+    "phin": "^3.6.1",
     "pm2": "^5.1.2",
     "profane-words": "^1.4.0",
     "rate-limiter-flexible": "^2.2.1",

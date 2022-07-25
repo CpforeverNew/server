@@ -24,8 +24,12 @@ class World extends Server {
 
 let args = process.argv.slice(2)
 
+if(args.includes('dev_mode')) {
+    process.mode = 'dev';
+}
+
 for (let world of args) {
     if (world in config.worlds) {
-        new World(world)
+        world !== 'dev_mode' && new World(world)
     }
 }
