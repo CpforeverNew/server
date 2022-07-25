@@ -1,7 +1,10 @@
-node_modules
-logs
 *.DS_Store
 *.tmp
 
+node_modules
+
 config/config.json
 package-lock.json
+
+dist
+logs
