@@ -4,6 +4,10 @@
             "targets": {
                 "node": "current"
             }
-        }]
+        }],
+        ["@babel/preset-typescript"]
+    ],
+    "plugins": [
+        ["inline-dotenv"]
     ]
 }
