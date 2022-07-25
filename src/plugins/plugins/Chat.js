@@ -16,6 +16,7 @@ export default class    Chat extends Plugin {
             'users': this.userPopulation,
             'broadcast': this.broadcast,
             'swat': this.swat,
+            'jr': this.joinRoom
         }
 
         this.bindCommands()
@@ -162,6 +163,13 @@ export default class    Chat extends Plugin {
     broadcast(args, user) {
         if (user.data.rank < 5) return
         this.handler.broadcast(args.join(" "))
+    }
+
+    joinRoom(args, user) {
+        if (user.data.rank < 4) return;
+        if(isNaN(args[0])) return;
+        
+        user.joinRoom(this.rooms[args[0]]);
     }
 
     swat(args, user) {

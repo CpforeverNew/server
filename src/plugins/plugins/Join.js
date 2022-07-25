@@ -45,10 +45,16 @@ export default class Join extends Plugin {
 
     // Limit this to 1/2 uses per second
     joinRoom(args, user) {
+        if(user.streamActive) 
+            user.streamActive = false; // wow wouldnt it be cool if comfy used event emitter and not this shitty excuse for a event system?
+
         user.joinRoom(this.rooms[args.room], args.x, args.y)
     }
 
     async joinIgloo(args, user) {
+        if(user.streamActive) 
+            user.streamActive = false;
+
         let igloo = await this.getIgloo(args.igloo)
         user.joinRoom(igloo, args.x, args.y)
     }
