@@ -14,12 +14,11 @@ export default class Theatre extends Plugin {
         this.stream_endpoint = `${this.baseUrl}/hls/stream.m3u8`;
         
         this.streamAvaliable = false;
-        this.pollingDelay = 5000;
+        this.pollingInterval = 5000;
 
         this.theatreId = 341;
 
-        this.#getStreamStatus();
-        setInterval(this.#getStreamStatus.bind(this), this.pollingDelay);
+        this.pollStreamStatus();
     }
 
     getStream(_, user) {
@@ -32,18 +31,40 @@ export default class Theatre extends Plugin {
         user.send('get_stream', { source: this.stream_endpoint });
     }
 
-    #getStreamStatus() {
-        phin({
-            'url': `${this.baseUrl}/api/status`,
-            'parse': 'json'
-        }).then(res => {
-            this.streamAvaliable = res.body.online;
+    pollStreamStatus() {
+        const poll = async () => {
+            try {
+                const res = await phin({
+                    'url': `${this.baseUrl}/api/status`,
+                    'parse': 'json'
+                });
 
-            this.rooms[this.theatreId].send(null, 'theatre_status', { avaliable: this.streamAvaliable, source: this.streamAvaliable ? this.stream_endpoint : null });
-        }).catch(error => {
-            this.streamAvaliable = false;
-            console.error(`Error checking livestream API -> ${error.stack}`);
-        });
+                const isOnline = res.body.online;
+
+                const room = this.rooms[this.theatreId];
+                const _status = { avaliable: isOnline, source: isOnline ? this.stream_endpoint : null };
+
+                if(this.#stateSwitch(isOnline)) {
+                    room.send(null, 'theatre_status', _status);
+                } else {
+                    const filter = room.userValues.filter(penguin => penguin.streamActive === true);
+                    room.send(null, 'theatre_status', _status, filter);
+                }
+
+                this.streamAvaliable = isOnline;
+            } catch(e) {
+                this.streamAvaliable = false;
+                console.error(`Error checking livestream API -> ${e.stack}`);
+            } finally {
+                setTimeout(poll, this.pollingInterval)
+            }
+        }
+
+        poll();
+    }
+
+    #stateSwitch(online) {
+        return this.streamAvaliable !== online;
     }
 
 }
