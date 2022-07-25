@@ -52,6 +52,9 @@ export default class Join extends Plugin {
     }
 
     async joinIgloo(args, user) {
+        if(user.streamActive) 
+            user.streamActive = false;
+
         let igloo = await this.getIgloo(args.igloo)
         user.joinRoom(igloo, args.x, args.y)
     }
