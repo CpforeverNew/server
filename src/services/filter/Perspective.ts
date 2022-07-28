@@ -20,6 +20,13 @@ export async function getPerspectiveAnalysis(input: string) {
   return new PerspectiveAnalysisResult(input, response)
 }
 
+/**
+ * Represents the result of some user input that's been analyzed by Google's Perspective
+ * API
+ * 
+ * It provides convenience methods for determining whether the response indicates that the
+ * input is profane, and gives some information about it
+ */
 export class PerspectiveAnalysisResult {
   public readonly filter = 'perspectiveApi'
 

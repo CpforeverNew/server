@@ -33,6 +33,12 @@ export interface InputFilterResult {
   shouldTextBeFiltered(): boolean;
 }
 
+/**
+ * Represents the result of some user input that was matched against our static
+ * blacklist of swear words
+ * 
+ * Input that reaches this point is already known to be profane
+ */
 export class StaticBlacklistResult {
   public readonly filter = 'blacklist'
 
