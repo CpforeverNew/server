@@ -8,3 +8,9 @@ package-lock.json
 
 dist/
 logs/
+
+# Mac files
+.DS_Store
+
+# Yarn
+yarn.lock
