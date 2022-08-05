@@ -9,6 +9,7 @@ export default class Server {
         this.users = users
         this.db = db
         this.handler = handler
+        this.config = config
 
         let io = this.createIo(config.socketio, {
             cors: {
@@ -18,9 +19,18 @@ export default class Server {
             path: '/'
         })
 
-        this.rateLimiter = new RateLimiterFlexible.RateLimiterMemory({
+       // this.rateLimiter = new RateLimiterFlexible.RateLimiterMemory({
             // 20 events allowed per second
-            points: 20,
+         //   points: 20,
+         //   duration: 1
+        //})
+        this.addressLimiter = new RateLimiterFlexible.RateLimiterMemory({
+            points: config.rateLimit.addressEventsPerSecond,
+            duration: 1
+        })
+
+        this.userLimiter = new RateLimiterFlexible.RateLimiterMemory({
+            points: config.rateLimit.userEventsPerSecond,
             duration: 1
         })
 
@@ -54,44 +64,51 @@ export default class Server {
         return require('https').createServer(loaded)
     }
 
-    connectionMade(socket) {
-        let ip = (socket.client.request.headers['cf-connecting-ip']) ? socket.client.request.headers['cf-connecting-ip'] : socket.request.connection.remoteAddress
-        console.log(`[Server] Connection from: ${ip}`)
-        if (this.handler.id == 'Snowball') {
-            for (var x in this.users) {
-                if (this.users[x].ipAddress == ip) {
-                    this.users[x].send('close_with_error', {error: `This IP address has connected to a new user - Server ${this.handler.id} does not allow Multi-Logging!`})
-                    this.users[x].close()
-                }
-            }
-        }
-        let user = new User(socket, this.handler)
-        this.users[socket.id] = user
-        this.users[socket.id].ipAddress = ip
+    connectionMade(socket) {	
+        let user = new User(socket, this.handler)	
+        user.address = this.getSocketAddress(socket)	
+        this.users[socket.id] = user	
+        console.log(`[Server] Connection from: ${socket.id} ${user.address}`)	
+        socket.on('message', (message) => this.messageReceived(message, user))	
+        socket.on('disconnect', () => this.connectionLost(user))	
+    }	
+    messageReceived(message, user) {	
+        this.addressLimiter.consume(user.address)	
+            .then(() => {	
+                let userID = this.getUserId(user)
 
-        socket.on('message', (message) => this.messageReceived(message, user))
-        socket.on('disconnect', () => this.connectionLost(user))
-    }
+                this.userLimiter.consume(userID)	
+                    .then(() => {	
+                        this.handler.handle(message, user)	
+                    })	
+                    .catch(() => {	
+                        // Blocked user	
+                    })	
+            })	
+            .catch(() => {	
+                // Blocked address	
+            })	
+    }	
+    connectionLost(user) {	
+        console.log(`[Server] Disconnect from: ${user.socket.id} ${user.address}`)	
+        this.handler.close(user)	
+    }	
+    getSocketAddress(socket) {	
+        let headers = socket.handshake.headers	
+        let ipAddressHeader = this.config.rateLimit.ipAddressHeader	
+        if (ipAddressHeader && headers[ipAddressHeader]) {	
+            return headers[ipAddressHeader]	
+        }	
+        if (headers['x-forwarded-for']) {	
+            return headers['x-forwarded-for'].split(',')[0]	
+        }	
+        return socket.handshake.address	
+    }	
 
-    messageReceived(message, user) {
-        if (message.length > 10000) {
-            console.log(`[Server] Message from ${user.socket.id} is too long`)
-            return
-        }
-        // Consume 1 point per event from IP address
-        this.rateLimiter.consume(user.ipAddress)
-            .then(() => {
-                // Allowed
-                this.handler.handle(message, user)
-            })
-            .catch(() => {
-                // Blocked
-            })
-    }
-
-    connectionLost(user) {
-        console.log(`[Server] Disconnect from: ${user.socket.id}`)
-        this.handler.close(user)
+    getUserId(user) {
+        return (user.data && user.data.id)
+            ? user.data.id
+            : user.socket.id
     }
 
 }

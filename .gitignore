@@ -6,3 +6,6 @@ dist/
 logs/
 .env
 .vscode/
+
+# Mac files
+.DS_Store
