@@ -3,7 +3,7 @@ import Sequelize from 'sequelize'
 
 export default class IglooInventories extends Sequelize.Model {
 
-    static init(sequelize, DataTypes) {
+    static _init(sequelize, DataTypes) {
         return super.init(
             {
                 userId: {
