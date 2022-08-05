@@ -1,18 +1,25 @@
 import fs from 'fs'
 import path from 'path'
 import Sequelize from 'sequelize'
+import Users from './models/Users'
+import DailyPrizePools from './models/DailyPrizePools'
+import DailyPrizePoolPrizes from './models/DailyPrizePoolPrizes'
+import DailyPrizeRedemptions from './models/DailyPrizeRedemptions'
 
 const Op = Sequelize.Op
 
-
+/**
+ * @todo Separate all these model specific methods from the class (and probably
+ *  get rid of this class altogether)
+ */
 export default class Database {
 
     constructor(config) {
         this.sequelize = new Sequelize(
-            config.database,
-            config.user,
-            config.password, {
-                host: config.host,
+            process.env.DB_NAME ?? config.database,
+            process.env.DB_USER ?? config.user,
+            process.env.DB_PASSWORD ?? config.password, {
+                host: process.env.DB_HOST ?? config.host,
                 dialect: config.dialect,
                 logging: (config.debug) ? console.log : false
             })
@@ -23,24 +30,31 @@ export default class Database {
         this.dir = `${__dirname}/models`
         this.loadModels()
 
-        this.sequelize
-            .authenticate()
-            .then(() => {
-                // Connected
-            })
-            .catch(error => {
-                console.error(`[Database] Unable to connect to the database: ${error}`)
-            })
+        this.sequelize.authenticate().catch(error => {
+            console.error(`[Database] Unable to connect to the database: ${error}`)
+        })
     }
 
     loadModels() {
         fs.readdirSync(this.dir).forEach(model => {
             let modelImport = require(path.join(this.dir, model)).default
-            let modelObject = modelImport.init(this.sequelize, Sequelize)
+            let modelObject = modelImport._init(this.sequelize, Sequelize)
 
             let name = model.charAt(0).toLowerCase() + model.slice(1, -3)
 
             this[name] = modelObject
+        })
+
+        DailyPrizePoolPrizes.belongsTo(DailyPrizePools, {
+            foreignKey: 'pool_id'
+        })
+
+        DailyPrizeRedemptions.belongsTo(Users, {
+            foreignKey: 'user_id'
+        })
+
+        DailyPrizeRedemptions.belongsTo(DailyPrizePoolPrizes, {
+            foreignKey: 'prize_id'
         })
     }
 
@@ -79,18 +93,18 @@ export default class Database {
     }
 
     async getUserByUsername(username) {
-        return await this.findOne('users', {
+        return await Users.findOne({
             where: {
-                username: username
-            }
+                username: username,
+            },
         })
     }
 
     async getUserById(userId) {
-        return await this.findOne('users', {
+        return await Users.findOne({
             where: {
-                id: userId
-            }
+                id: userId,
+            },
         })
     }
 
@@ -254,28 +268,28 @@ export default class Database {
     }
 
     async getUnverifedUsers(userId) {
-        return await this.findAll('users', {
+        return await Users.findAll({
             where: {
                 username_approved: "0",
-                username_rejected: "0"
-            }
+                username_rejected: "0",
+            },
         })
     }
 
     async searchForUsers(username) {
 
-        let exactMatch = await this.findOne('users', {
+        let exactMatch = await Users.findOne({
             where: {
                 username: username
             }
         })
 
-        let closeMatch = await this.findAll('users', {
+        let closeMatch = await Users.findAll({
             where: {
                 username: {
-                    [Op.like]: '%' + username + '%'
-                }
-            }
+                    [Op.like]: '%' + username + '%',
+                },
+            },
         })
 
         if (!exactMatch) {
@@ -293,7 +307,7 @@ export default class Database {
 
     async updateLastReport(userID) {
         let time = (new Date).getTime()
-        this.users.update({
+        Users.update({
             lastReport : time
         }, {
             where: {
@@ -307,7 +321,7 @@ export default class Database {
     async addCoins(userID, coins) {
         let user = await this.getUserById(userID)
 
-        this.users.update({
+        Users.update({
             coins: parseInt(user.dataValues.coins) + parseInt(coins)
         }, {
             where: {
@@ -361,7 +375,7 @@ export default class Database {
         let existingUser = await this.getUserByUsername(newUsername)
         if (existingUser) return false
 
-        this.users.update({
+        Users.update({
             username: newUsername
         }, {
             where: {
@@ -376,7 +390,7 @@ export default class Database {
         if (password.length < 5) return false
         if (password.length > 32) return false
         let hash = await bcrypt.hash(password, 10)
-        this.users.update({
+        Users.update({
             password: hash
         }, {
             where: {
@@ -421,15 +435,6 @@ export default class Database {
             attributes: ['id']
         })
         return puffles.length
-    }
-
-    async getPuffleCost(puffleId) {
-        return await this.findOne('puffles', {
-            where: {
-                id: puffleId
-            },
-            attributes: ['cost']
-        })
     }
 
     async adoptPuffle(userId, type, name) {
@@ -591,7 +596,7 @@ export default class Database {
             attributes: ['penguinId']
         })
         for (var x in blueTeamMembers) {
-            let username = (await this.findOne('users', {
+            let username = (await Users.findOne({
                 where: {
                     id: blueTeamMembers[x].penguinId
                 },
@@ -619,7 +624,7 @@ export default class Database {
             blueTotal = parseInt(blueTotal) + parseInt(score)
         }
         for (var x in redTeamMembers) {
-            let username = (await this.findOne('users', {
+            let username = (await Users.findOne({
                 where: {
                     id: redTeamMembers[x].penguinId
                 },
@@ -688,7 +693,7 @@ export default class Database {
         })
         for (var x in blueTeamMembers) {
             let scoreTotal = 0
-            let username = (await this.findOne('users', {
+            let username = (await Users.findOne({
                 where: {
                     id: blueTeamMembers[x].penguinId
                 },
@@ -723,7 +728,7 @@ export default class Database {
         }
         for (var x in redTeamMembers) {
             let scoreTotal = 0
-            let username = (await this.findOne('users', {
+            let username = (await Users.findOne({
                 where: {
                     id: redTeamMembers[x].penguinId
                 },
