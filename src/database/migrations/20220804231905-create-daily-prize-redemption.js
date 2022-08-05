@@ -18,7 +18,6 @@ module.exports = {
       },
       prize_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: 'daily_prize_pool_prizes',
           key: 'id',

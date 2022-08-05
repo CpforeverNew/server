@@ -5,7 +5,7 @@ const MS_PER_DAY = 1000 * 60 * 60 * 24
 export default class DailyPrizeRedemptions extends Model {
   declare id: number;
   declare user_id: number;
-  declare prize_id: number;
+  declare prize_id: number | null;
   declare redeemed_at: Date;
 
   getDaysSinceRedemption() {
@@ -35,7 +35,6 @@ export default class DailyPrizeRedemptions extends Model {
       },
       prize_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         references: {
           model: 'daily_prize_pool_prizes',
           key: 'id',
