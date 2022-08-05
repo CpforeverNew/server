@@ -4,7 +4,7 @@
   "description": "A server for https://github.com/cpforever/client/",
   "scripts": {
     "dev": "babel-watch ./src/World.js Login Blizzard Snowball dev_mode --extensions .ts .js",
-    "build": "babel src -d dist --extensions \".ts,.js\"",
+    "build": "babel src -d dist --extensions \".ts,.js\" --copy-files",
     "start": "pm2 start ecosystem.config.js",
     "stop": "pm2 stop ecosystem.config.js",
     "restart": "pm2 restart ecosystem.config.js",
@@ -24,22 +24,19 @@
     "url": "https://github.com/cpforever/server/issues"
   },
   "homepage": "https://cpforever.net",
-  "devDependencies": {
+  "dependencies": {
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
     "@babel/node": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.18.6",
+    "@babel/register": "^7.18.9",
     "babel-plugin-inline-dotenv": "^1.7.0",
     "babel-watch": "^7.7.0",
     "jest": "^28.1.3",
     "sequelize-cli": "^6.4.1",
     "sequelize-typescript": "^2.1.3",
     "typescript": "^4.7.4",
-    "@babel/register": "^7.18.9"
-  },
-  "dependencies": {
-    "babel": "^6.23.0",
     "badwords": "^1.0.0",
     "bcrypt": "^5.0.0",
     "cryptojs": "^2.5.3",
