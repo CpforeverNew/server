@@ -20,6 +20,11 @@
             "key": "/path/to/key.key"
         }
     },
+    "rateLimit": {
+        "addressEventsPerSecond": 50,
+        "userEventsPerSecond": 10,
+        "ipAddressHeader": false
+    },
     "cors": {
         "origin": "http://localhost:8080"
     },
