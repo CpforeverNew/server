@@ -89,7 +89,7 @@ export default class DailyRewards extends Plugin {
     switch (prize.type) {
       case 'coins':
         return user.send('update_coins', {
-          coins: user.data.coins + Number(prize.value),
+          coins: user.data.coins,
         })
       case 'clothingItem':
         const item = this.crumbs.items[prize.value]
@@ -113,7 +113,7 @@ export default class DailyRewards extends Plugin {
   async giveRewardToPlayer(user: any, prize: DailyPrizePoolPrizes) {
     switch (prize.type) {
       case 'coins':
-        this.db.addCoins(user.data.id, prize.value)
+        user.updateCoins(prize.value)
         break
       case 'clothingItem':
         user.inventory.add(prize.value)
