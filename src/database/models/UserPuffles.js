@@ -3,7 +3,7 @@ import Sequelize from 'sequelize'
 
 export default class UserPuffles extends Sequelize.Model {
 
-    static init(sequelize, DataTypes) {
+    static _init(sequelize, DataTypes) {
         return super.init({
             id: {
                 type: DataTypes.INTEGER(11),

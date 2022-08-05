@@ -4,6 +4,12 @@
             "targets": {
                 "node": "current"
             }
+        }],
+        ["@babel/preset-typescript", {
+            "allowDeclareFields": true
         }]
+    ],
+    "plugins": [
+        ["inline-dotenv"]
     ]
 }

@@ -1,16 +1,11 @@
 *.DS_Store
 *.tmp
-
 node_modules/
-
 config/config.json
-package-lock.json
-
 dist/
 logs/
+.env
+.vscode/
 
 # Mac files
 .DS_Store
-
-# Yarn
-yarn.lock

@@ -64,7 +64,10 @@ export default class DataHandler {
         message.split('\xdd').filter(Boolean).forEach(packet => {
             try {
                 let parsed = JSON.parse(packet)
-                //console.log(`[DataHandler] Received: ${parsed.action} ${JSON.stringify(parsed.args)}`)
+                
+                if (process.mode === 'dev') {
+                    console.log(`[DataHandler] Received: ${parsed.action} ${JSON.stringify(parsed.args)}`)
+                }
 
                 // Only allow game_auth until user is authenticated
                 if (!user.authenticated && parsed.action != 'game_auth') {
@@ -83,7 +86,7 @@ export default class DataHandler {
         })
     }
 
-    fireEvent(event, args, user) {
+    async fireEvent(event, args, user) {
         this.plugins.getEvent(event, args, user)
     }
 

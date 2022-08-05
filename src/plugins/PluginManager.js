@@ -30,7 +30,7 @@ export default class PluginManager {
         }
     }
 
-    getEvent(event, args, user) {
+    async getEvent(event, args, user) {
         try {
             this.events[event](args, user)
         } catch(error) {

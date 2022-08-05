@@ -1,67 +1,82 @@
-import { Client, Intents } from 'discord.js'
+import { PerspectiveAnalysisResult } from '../services/filter/Perspective';
+
+const channels = {
+  chat: '969631117642698872',
+  moderation: '970279187707465759',
+  login: '969631284294991882',
+  reporting: '996152869994639410',
+  errors: '999483558794105023',
+}
 
 export default class Discord {
+    ready = false;
 
-    constructor(config) {
-        this.ready = false
-        this.config = config
-        const token = config.discordbottoken
-        const dcbot = new Client({
-            intents: [Intents.FLAGS.GUILDS]
-        });
-        this.dcbot = dcbot
+    constructor(client) {
+        this.dcbot = client
+
         this.dcbot.once('ready', () => {
-            console.log('CPForever Discord Logging Ready!');
             this.ready = true
-        });
-        this.dcbot.login(token)
+        })
     }
 
-    logChatMessage(username, message, room, toxicity, profanity, sexual) {
-        if (!this.ready) return
-        const channel = this.dcbot.channels.cache.get(this.config.chatlogchannel)
-        process.mode !== 'dev' && channel.send(`**USER:** ${username}\n**SENT MESSAGE:** ${message}\n**IN ROOM:** ${room}\n**TOXICITY:** ${toxicity}\n**PROFANITY:** ${profanity}\n**SEXUAL:** ${sexual}`);
+    logChatMessage(username, message, room, filterResult) {
+        if (!this.ready || process.mode === 'dev') return
+
+        const channel = this.dcbot.channels.cache.get(channels.chat)
+        let output = `**USER:** ${username}\n**SENT MESSAGE:** ${message}\n**IN ROOM:** ${room}`
+
+        if (filterResult instanceof PerspectiveAnalysisResult) {
+            output += `\n**TOXICITY:** ${toxicity}\n**PROFANITY:** ${profanity}\n**SEXUAL:** ${sexual}`
+        }
+
+        channel.send(output);
     }
 
     logLogin(username) {
-        if (!this.ready) return
-        const channel = this.dcbot.channels.cache.get(this.config.loginlogchannel)
-        process.mode !== 'dev' && channel.send(`**USER:** ${username} **LOGGED IN**`);
+        if (!this.ready || process.mode === 'dev') return
+
+        const channel = this.dcbot.channels.cache.get(channels.login)
+        channel.send(`**USER:** ${username} **LOGGED IN**`);
     }
 
     kickLogs(moderator, user) {
-        if (!this.ready) return
-        const channel = this.dcbot.channels.cache.get(this.config.modlogchannel)
-        process.mode !== 'dev' && channel.send(`**MODERATOR:** ${moderator} **KICKED USER** ${user}`);
+        if (!this.ready || process.mode === 'dev') return
+
+        const channel = this.dcbot.channels.cache.get(channels.moderation)
+        channel.send(`**MODERATOR:** ${moderator} **KICKED USER** ${user}`);
     }
 
     banLogs(moderator, user, duration, expires) {
-        if (!this.ready) return
-        const channel = this.dcbot.channels.cache.get(this.config.modlogchannel)
-        process.mode !== 'dev' && channel.send(`**MODERATOR:** ${moderator} **BANNED USER** ${user} **FOR** ${duration} **UNTIL** ${expires}`);
+        if (!this.ready || process.mode === 'dev') return
+
+        const channel = this.dcbot.channels.cache.get(channels.moderation)
+        channel.send(`**MODERATOR:** ${moderator} **BANNED USER** ${user} **FOR** ${duration} **UNTIL** ${expires}`);
     }
 
     addItemLogs(moderator, user, item) {
-        if (!this.ready) return
-        const channel = this.dcbot.channels.cache.get(this.config.modlogchannel)
-        process.mode !== 'dev' && channel.send(`**MODERATOR:** ${moderator} **ADDED ITEM** ${item} **TO USER** ${user}`);
+        if (!this.ready || process.mode === 'dev') return
+
+        const channel = this.dcbot.channels.cache.get(channels.moderation)
+        channel.send(`**MODERATOR:** ${moderator} **ADDED ITEM** ${item} **TO USER** ${user}`);
     }
 
     addCoinLogs(moderator, user, coins) {
-        if (!this.ready) return
-        const channel = this.dcbot.channels.cache.get(this.config.modlogchannel)
-        process.mode !== 'dev' && channel.send(`**MODERATOR:** ${moderator} **ADDED** ${coins} **COINS TO USER** ${user}`);
+        if (!this.ready || process.mode === 'dev') return
+
+        const channel = this.dcbot.channels.cache.get(channels.moderation)
+        channel.send(`**MODERATOR:** ${moderator} **ADDED** ${coins} **COINS TO USER** ${user}`);
     }
 
     changeUsernameLogs(moderator, oldname, newname) {
-        if (!this.ready) return
-        const channel = this.dcbot.channels.cache.get(this.config.modlogchannel)
-        process.mode !== 'dev' && channel.send(`**MODERATOR:** ${moderator} **CHANGED THE USERNAME OF** ${oldname} **TO** ${newname}`);
+        if (!this.ready || process.mode === 'dev') return
+
+        const channel = this.dcbot.channels.cache.get(channels.moderation)
+        channel.send(`**MODERATOR:** ${moderator} **CHANGED THE USERNAME OF** ${oldname} **TO** ${newname}`);
     }
 
     async reportPlayer(reason, username, id, reporterUsername, lastReport=0, userID=0) {
         if (!this.ready) return
-        const channel = this.dcbot.channels.cache.get("996152869994639410")
+        const channel = this.dcbot.channels.cache.get(channels.reporting)
 
         if (!this.fakeReports) {
             this.fakeReports = 0;
@@ -111,9 +126,9 @@ export default class Discord {
       }
 
     errorAlert(error) {
-        if (!this.ready) return
-        //999483558794105023
-        const channel = this.dcbot.channels.cache.get("999483558794105023")
-        process.mode !== 'dev' && channel.send(`**ERROR:** ${error} **REPORTED**`);
+        if (!this.ready || process.mode === 'dev') return
+
+        const channel = this.dcbot.channels.cache.get(channels.errors)
+        channel.send(`**ERROR:** ${error} **REPORTED**`);
     } 
 }
