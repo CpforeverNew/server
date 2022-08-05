@@ -12,14 +12,16 @@ export default class DailyRewards extends Plugin {
    * @todo Argument types
    */
   async claimDailyReward(_: any, user: any) {
-    const latestRedemption = await DailyPrizeRedemptions.findOne({
+    const redemptions = await DailyPrizeRedemptions.findAll({
       where: {
         user_id: user.data.id,
       },
       order: [['redeemed_at', 'desc']],
     })
 
-    if (latestRedemption && latestRedemption.getDaysSinceRedemption() < 1) {
+    const hasRedeemedToday = redemptions.some(r => r.getDaysSinceRedemption() < 1)
+
+    if (hasRedeemedToday) {
       return user.send('error', {
         error: "You can only claim a free gift once per day",
       })
@@ -47,40 +49,65 @@ export default class DailyRewards extends Plugin {
       })
     }
 
-    var chosenPrize = await this.getRandomPrize(prizes)
+    const eligiblePrizes = prizes.filter(prize => {
+      const hasClaimed = redemptions.some(entry => entry.prize_id === prize.id)
 
-    if (!chosenPrize) {
-      return user.send('error', {
-        error: 'An unexpected error occurred - please try again in a minute, or contact support if this persists',
-      })
-    }
+      return hasClaimed === false
+    })
 
-    const userHasPrize = await this.doesUserHavePrize(user.data.id, chosenPrize)
+    var chosenPrize = await this.getRandomPrize(eligiblePrizes)
 
-    if (userHasPrize) {
-      chosenPrize = new DailyPrizePoolPrizes({
-        id: 0,
+    const userHasPrize = await this.doesUserHavePrize(user, chosenPrize)
+
+    if (eligiblePrizes.length === 0 || !chosenPrize || userHasPrize) {
+      chosenPrize = {
+        id: null,
         pool_id: 0,
         type: 'coins',
         value: 500,
-      })
+      } as unknown as DailyPrizePoolPrizes;
     }
 
     await this.giveRewardToPlayer(user, chosenPrize)
 
-    if (chosenPrize.id > 0) {
-      const newRedemption = new DailyPrizeRedemptions({
-        user_id: user.data.id,
-        prize_id: chosenPrize.id,
-      })
-
-      await newRedemption.save()
-    }
-
-    user.send('claimDailyReward', {
-      type: chosenPrize.type,
-      value: chosenPrize.value,
+    const newRedemption = new DailyPrizeRedemptions({
+      user_id: user.data.id,
+      prize_id: chosenPrize.id,
     })
+
+    await newRedemption.save()
+
+    this.notifyClientOfReward(chosenPrize, user)
+  }
+
+  async notifyClientOfReward(prize: DailyPrizePoolPrizes, user: any) {
+    user.send('claimDailyReward', {
+      type: prize.type,
+      value: prize.value,
+    })
+
+    switch (prize.type) {
+      case 'coins':
+        return user.send('update_coins', {
+          coins: user.data.coins + Number(prize.value),
+        })
+      case 'clothingItem':
+        const item = this.crumbs.items[prize.value]
+
+        return user.send('add_item', {
+          item: prize.value,
+          name: item.name,
+          slot: this.crumbs.items.slots[item.type - 1],
+          coins: user.data.coins,
+        })
+      case 'furnitureItem':
+        return user.send('add_furniture', {
+          furniture: prize.value,
+          coins: user.data.coins,
+        })
+      default:
+        throw new Error('Unexpected error occurred - could not handle prize type')
+    }
   }
 
   async giveRewardToPlayer(user: any, prize: DailyPrizePoolPrizes) {
@@ -124,7 +151,11 @@ export default class DailyRewards extends Plugin {
     }
   }
 
-  async doesUserHavePrize(user: any, prize: DailyPrizePoolPrizes) {
+  async doesUserHavePrize(user: any, prize?: DailyPrizePoolPrizes) {
+    if (!prize) {
+      return true
+    }
+
     const record = await DailyPrizeRedemptions.findOne({
       where: {
         prize_id: prize.id,
