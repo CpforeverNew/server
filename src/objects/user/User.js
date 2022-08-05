@@ -16,6 +16,8 @@ export default class User {
         this.db = handler.db
         this.crumbs = handler.crumbs
 
+        this.address
+
         this.validatePurchase = new PurchaseValidator(this)
 
         this.data
