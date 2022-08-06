@@ -50,6 +50,10 @@ export default class DailyRewards extends Plugin {
     }
 
     const eligiblePrizes = prizes.filter(prize => {
+      if (prize.type === 'furnitureItem') {
+        return true
+      }
+
       const hasClaimed = redemptions.some(entry => entry.prize_id === prize.id)
 
       return hasClaimed === false
@@ -57,9 +61,9 @@ export default class DailyRewards extends Plugin {
 
     var chosenPrize = await this.getRandomPrize(eligiblePrizes)
 
-    const userHasPrize = await this.doesUserHavePrize(user, chosenPrize)
+    const userHasItem = await this.doesUserHaveItem(user, chosenPrize)
 
-    if (eligiblePrizes.length === 0 || !chosenPrize || userHasPrize) {
+    if (eligiblePrizes.length === 0 || !chosenPrize || userHasItem) {
       chosenPrize = {
         id: null,
         pool_id: 0,
@@ -149,32 +153,15 @@ export default class DailyRewards extends Plugin {
 
       target -= prize.probability
     }
+
+    return null
   }
 
-  async doesUserHavePrize(user: any, prize?: DailyPrizePoolPrizes) {
-    if (!prize) {
-      return true
-    }
-
-    const record = await DailyPrizeRedemptions.findOne({
-      where: {
-        prize_id: prize.id,
-        user_id: user.data.id,
-      },
-    })
-
-    if (record) {
-      return true
-    }
-
-    return await this.doesUserHaveItem(user, prize.value, prize.type)
-  }
-
-  async doesUserHaveItem(user: any, item_id: string, type: PrizeType) {
-    if (type !== 'clothingItem') {
+  async doesUserHaveItem(user: any, prize: DailyPrizePoolPrizes | null): Promise<boolean> {
+    if (prize?.type !== 'clothingItem') {
       return false
     }
 
-    return user.inventory.includes(Number(item_id))
+    return user.inventory.includes(Number(prize.value))
   }
 }
