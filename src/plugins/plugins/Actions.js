@@ -6,6 +6,7 @@ export default class Actions extends Plugin {
     constructor(users, rooms) {
         super(users, rooms)
         this.events = {
+            'send_drag_position': this.send_drag_position,
             'send_position': this.sendPosition,
             'send_frame': this.sendFrame,
             'snowball': this.snowball,
@@ -14,6 +15,18 @@ export default class Actions extends Plugin {
             'report_player': this.reportPlayer
         }
         this.fakeReports = 0;
+    }
+
+    send_drag_position(args, user) {
+        user.x = args.x
+        user.y = args.y
+        user.frame = 1
+
+        user.room.send(user, 'send_drag_position', {
+            id: args.playerID,
+            x: args.x,
+            y: args.y
+        })
     }
 
     sendPosition(args, user) {
