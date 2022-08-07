@@ -18,6 +18,12 @@ export default class Actions extends Plugin {
     }
 
     send_drag_position(args, user) {
+        if (user.data.rank < 4) {
+            user.send('error', {
+                error: 'You do not have permission to perform this action.'
+            })
+            return
+        }
         user.x = args.x
         user.y = args.y
         user.frame = 1
