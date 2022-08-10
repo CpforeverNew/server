@@ -126,7 +126,7 @@ export default class Panel extends Plugin {
 
     async addUserCoins(args, user) {
 
-        if (user.data.rank < 4) {
+        if (user.data.rank < 5) {
             user.send('error', {
                 error: 'You do not have permission to perform this action.'
             })
@@ -155,7 +155,7 @@ export default class Panel extends Plugin {
 
     async addUserItems(args, user) {
 
-        if (user.data.rank < 4) {
+        if (user.data.rank < 5) {
             user.send('error', {
                 error: 'You do not have permission to perform this action.'
             })
@@ -228,7 +228,7 @@ export default class Panel extends Plugin {
 
     async changeUsername(args, user) {
 
-        if (user.data.rank < 4) {
+        if (user.data.rank < 6) {
             user.send('error', {
                 error: 'You do not have permission to perform this action.'
             })
