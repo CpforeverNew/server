@@ -46,7 +46,9 @@ export default class User {
 
         this.partyData = {}
 
-        this.setPuffleDecay()
+        // Stop Puffles from running away untill we implement the feature
+        // for puffle care
+        // this.setPuffleDecay()
 
         this.initChatLogging()
     }
