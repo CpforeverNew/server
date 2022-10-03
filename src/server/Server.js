@@ -1,6 +1,7 @@
 import RateLimiterFlexible from 'rate-limiter-flexible'
 
 import User from '../objects/user/User'
+import UserTickets from '../database/models/UserTickets'
 
 
 export default class Server {
@@ -89,7 +90,23 @@ export default class Server {
                 // Blocked address	
             })	
     }	
-    connectionLost(user) {	
+    async connectionLost(user) {	
+
+        // Remove Tickets from user
+        if (user.data && user.data.id) {
+            const userTickets = await UserTickets.findOne({
+                where: {
+                    user_id: user.data.id,
+                },
+            });
+
+            if (userTickets) {
+                userTickets.tickets = 0;
+                userTickets.updated_at = new Date();
+                userTickets.save();
+            }
+        }
+
         console.log(`[Server] Disconnect from: ${user.socket.id} ${user.address}`)	
         this.handler.close(user)	
     }	
