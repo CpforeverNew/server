@@ -118,9 +118,9 @@ export default class Igloo extends Plugin {
 
     updateMusic(args, user) {
         let igloo = this.getIgloo(user.data.id)
-        if (!igloo || igloo != user.room || igloo.music == args.music) {
+        if (!igloo || igloo != user.room)
             return
-        }
+
 
         igloo.update({ music: args.music })
         igloo.music = args.music
