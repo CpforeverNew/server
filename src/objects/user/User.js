@@ -50,6 +50,8 @@ export default class User {
         // for puffle care
         // this.setPuffleDecay()
 
+        this.updateLastLogin()
+
         this.initChatLogging()
     }
 
@@ -240,6 +242,14 @@ export default class User {
         this.closeInactive = setTimeout(() => {
             this.close()
         }, 3600000)
+    }
+
+    async updateLastLogin() {
+        if(!this.data) return setTimeout(() => this.updateLastLogin(), 1000)
+        this.data.last_login = new Date()
+        this.update({
+            last_login: this.data.last_login
+        })
     }
 
     async setPuffleDecay() {
