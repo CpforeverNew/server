@@ -225,6 +225,11 @@ export default class Users extends Model {
           }),
           allowNull: false
       },
+      activation: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: false
+      }
     }, {
       sequelize,
       timestamps: false,
