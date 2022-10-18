@@ -24,6 +24,10 @@ export default class Chat extends Plugin {
     // Events
 
     async sendMessage(args, user) {
+        if(!user.data.activation){
+            return user.send('error', { error: 'You must activate your account before you can chat.' })
+        }
+
         // Todo: message validation
         if (args.message.startsWith('!')) {
             return this.processCommand(args.message.substring(1), user)
