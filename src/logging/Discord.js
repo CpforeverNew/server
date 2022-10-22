@@ -74,6 +74,12 @@ export default class Discord {
         channel.send(`**MODERATOR:** ${moderator} **CHANGED THE USERNAME OF** ${oldname} **TO** ${newname}`);
     }
 
+    activateUserLogs(moderator, user) {
+        if (!this.ready || process.mode === 'dev') return;
+        const channel = this.dcbot.channels.cache.get(channels.moderation);
+        channel.send(`**MODERATOR:** ${moderator} **ACTIVATED USER** ${user}`);
+    }
+
     async reportPlayer(reason, username, id, reporterUsername, lastReport=0, userID=0) {
         if (!this.ready) return
         const channel = this.dcbot.channels.cache.get(channels.reporting)

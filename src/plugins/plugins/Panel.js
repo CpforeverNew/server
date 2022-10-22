@@ -14,7 +14,8 @@ export default class Panel extends Plugin {
             'add_user_coins': this.addUserCoins,
             'add_user_items': this.addUserItems,
             'ban_user': this.banUser,
-            'change_user_name': this.changeUsername
+            'change_user_name': this.changeUsername,
+            'activate_user': this.activateUser,
         }
     }
 
@@ -253,6 +254,31 @@ export default class Panel extends Plugin {
         return (recipient)
             ? recipient.data.rank
             : (await this.db.getUserById(id)).rank
+    }
+
+    async activateUser(args, userid) {
+
+        let user = this.usersById[userid]
+
+        if (user.data.rank < 4) {
+            user.send('error', {
+                error: 'You do not have permission to perform this action.'
+            })
+            return
+        }
+
+        let userName = (await this.db.getUserById(args.id)).username
+
+        let complete = await this.db.activateUser(args.id)
+
+        if (complete) {
+            user.send('error', {
+                error: 'User activated successfully.'
+            })
+
+            this.discord.activateUserLogs(user.data.username, userName)
+        }
+
     }
 
 }

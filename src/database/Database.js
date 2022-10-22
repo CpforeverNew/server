@@ -400,6 +400,18 @@ export default class Database {
         return true
     }
 
+    async activateUser(userId) {
+        if (this.getUserById(userId).dataValues.activation === 1) return false
+
+        Users.update({
+            activation: 1
+        }, {
+            where: {
+                id: userId
+            }
+        })
+    }
+
     async getPuffles(userId) {
         return await this.findAll('userPuffles', {
             where: {
