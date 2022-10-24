@@ -680,6 +680,15 @@ module.exports = {
         find: "",
       },
       {
+        id: "1005",
+        name: "memory",
+        member: "0",
+        maxUsers: "800",
+        game: "0",
+        spawn: "0",
+        find: "",
+      },
+      {
         id: "8008415",
         name: "vault",
         member: "0",
@@ -687,6 +696,15 @@ module.exports = {
         game: "0",
         spawn: "0",
         find: "",
+      },
+      {
+        id: "432234",
+        name: "circus",
+        member: "0",
+        maxUsers: "80",
+        game: "0",
+        spawn: "0",
+        find: " ",
       },
     ]);
   },
