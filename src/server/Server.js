@@ -93,19 +93,19 @@ export default class Server {
     async connectionLost(user) {	
 
         // Remove Tickets from user
-        if (user.data && user.data.id) {
-            const userTickets = await UserTickets.findOne({
-                where: {
-                    user_id: user.data.id,
-                },
-            });
-
-            if (userTickets) {
-                userTickets.tickets = 0;
-                userTickets.updated_at = new Date();
-                userTickets.save();
-            }
-        }
+        // if (user.data && user.data.id) {
+        //     const userTickets = await UserTickets.findOne({
+        //         where: {
+        //             user_id: user.data.id,
+        //         },
+        //     });
+        //
+        //     if (userTickets) {
+        //         userTickets.tickets = 0;
+        //         userTickets.updated_at = new Date();
+        //         userTickets.save();
+        //     }
+        // }
 
         console.log(`[Server] Disconnect from: ${user.socket.id} ${user.address}`)	
         this.handler.close(user)	
