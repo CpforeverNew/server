@@ -256,9 +256,7 @@ export default class Panel extends Plugin {
             : (await this.db.getUserById(id)).rank
     }
 
-    async activateUser(args, userid) {
-
-        let user = this.usersById[userid]
+    async activateUser(args, user) {
 
         if (user.data.rank < 4) {
             user.send('error', {
@@ -277,6 +275,10 @@ export default class Panel extends Plugin {
             })
 
             this.discord.activateUserLogs(user.data.username, userName)
+        }else {
+            user.send('error', {
+                error: 'User is already activated.'
+            })
         }
 
     }

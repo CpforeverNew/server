@@ -401,7 +401,7 @@ export default class Database {
     }
 
     async activateUser(userId) {
-        if (this.getUserById(userId).dataValues.activation === 1) return false
+        if (this.getUserById(userId).activation === 1) return false
 
         Users.update({
             activation: 1
