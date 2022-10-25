@@ -84,6 +84,7 @@ export default class Fair extends Plugin {
             await userTickets.save();
         } else {
             user.send('error', {error: 'You do not have any tickets.'});
+            return;
         }
 
         let item = user.validatePurchase.item(args.item)
