@@ -10,7 +10,12 @@ export default class Fair extends Plugin {
 
     async endMidwayGame(args: any, user: any) {
 
+        if (!args.tickets) return;
+
         const tickets = args.tickets;
+
+        if (tickets < 0) return;
+        if (tickets > 20000) return;
 
         const userTickets = await UserTickets.findOne({
             where: {

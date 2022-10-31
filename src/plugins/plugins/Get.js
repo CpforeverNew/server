@@ -28,9 +28,8 @@ export default class Get extends Plugin {
         }
 
         let userData = await this.db.getUserById(args.id)
-        let { banned, coins, loginKey, password, rank, joinTime, permaBan, ...penguin } = userData.dataValues
-
         if (userData) {
+            let { banned, coins, loginKey, password, rank, joinTime, permaBan, ...penguin } = userData.dataValues
             user.send('get_player', { penguin: penguin })
         }
     }
@@ -46,9 +45,9 @@ export default class Get extends Plugin {
         }
 
         let userData = await this.db.getUserById(args.id)
-        let { banned, coins, loginKey, password, rank, joinTime, permaBan, ...penguin } = userData.dataValues
 
         if (userData) {
+            let { banned, coins, loginKey, password, rank, joinTime, permaBan, ...penguin } = userData.dataValues
             user.send('get_rank', { rank: rank })
         }
     }

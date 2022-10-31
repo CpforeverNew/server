@@ -28,6 +28,8 @@ export default class Chat extends Plugin {
             return user.send('error', { error: 'You must activate your account before you can chat.' })
         }
 
+        if (!args.message) return;
+
         // Todo: message validation
         if (args.message.startsWith('!')) {
             return this.processCommand(args.message.substring(1), user)

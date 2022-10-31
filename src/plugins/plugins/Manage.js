@@ -23,6 +23,8 @@ export default class Manage extends Plugin {
     }
 
     async changePassword(args, user) {
+        if (!args.password) return
+
         let complete = this.db.changePassword(user.data.id, args.password)
         this.db.users.update({ password: hash }, { where: { id: user.data.id }})
         if (complete) user.send('error', { error: 'Password change complete!' })
@@ -30,6 +32,8 @@ export default class Manage extends Plugin {
     }
 
     async changeUsername(args, user) {
+        if (!args.username) return
+
         let complete = await this.db.changeUsername(user.data.id, args.username)
         this.db.users.update({ username_approved: 0, username_rejected: 0 }, { where: { id: user.data.id }})
         if (complete) user.send('error', { error: 'Username change complete! Please relogin.' })
